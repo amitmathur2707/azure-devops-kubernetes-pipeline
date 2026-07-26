@@ -28,3 +28,10 @@ steps:
     backendAzureRmStorageAccountName: 'sttfstateaks123'
     backendAzureRmContainerName: 'tfstate'
     backendAzureRmKey: 'terraform.tfstate'
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: $(System.DefaultWorkingDirectory)
+    commandOptions: '-var client_id=(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey)'
+    backendServiceArm: 'sp-aks-pipeline'
