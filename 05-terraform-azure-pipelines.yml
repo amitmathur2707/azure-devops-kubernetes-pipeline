@@ -1,0 +1,25 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: echo K8S Terraform Azure!
+  displayName: 'Run a one-line script'
+
+- task: DownloadSecureFile@1
+  name: publickey
+  inputs:
+    secureFile: 'azure_rsa.pub'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    commandOptions: '-var client_id=(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey)'
+    backendServiceArm: 'sp-aks-pipeline'
+    backendAzureRmResourceGroupName: 'rg-tfstate'
+    backendAzureRmStorageAccountName: 'sttfstateaks123'
+    backendAzureRmContainerName: 'tfstate'
+    backendAzureRmKey: 'terraform.tfstate'
